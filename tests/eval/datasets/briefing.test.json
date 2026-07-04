@@ -1,0 +1,8 @@
+{
+  "eval_cases": [
+    {
+      "eval_case_id": "BRF-1",
+      "prompt": {"role": "user", "parts": [{"text": "Give me my health briefing"}]}
+    }
+  ]
+}

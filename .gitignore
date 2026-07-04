@@ -32,3 +32,6 @@ venv/
 .DS_Store
 .idea/
 .vscode/
+
+# --- Eval artifacts (traces / grade results) ---
+artifacts/

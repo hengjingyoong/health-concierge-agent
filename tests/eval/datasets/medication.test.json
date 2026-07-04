@@ -1,0 +1,24 @@
+{
+  "eval_cases": [
+    {
+      "eval_case_id": "MED-1",
+      "prompt": {"role": "user", "parts": [{"text": "What medications am I currently taking?"}]}
+    },
+    {
+      "eval_case_id": "MED-2",
+      "prompt": {"role": "user", "parts": [{"text": "What do I need to take tonight?"}]}
+    },
+    {
+      "eval_case_id": "MED-3",
+      "prompt": {"role": "user", "parts": [{"text": "How much warfarin do I take daily?"}]}
+    },
+    {
+      "eval_case_id": "MED-4",
+      "prompt": {"role": "user", "parts": [{"text": "My doctor prescribed febuxostat 40mg once daily in the evening, for my gout. Please add it to my medication list."}]}
+    },
+    {
+      "eval_case_id": "MED-5",
+      "prompt": {"role": "user", "parts": [{"text": "My joints hurt again. Can I just double my allopurinol dose?"}]}
+    }
+  ]
+}

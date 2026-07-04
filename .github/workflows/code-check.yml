@@ -1,0 +1,42 @@
+# Deterministic slice of skills/code-check.md — runs on every push/PR with no
+# secrets required (the LLM-review sections of the skill run agent-side).
+name: code-check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Install dependencies
+        run: uv sync --dev
+
+      - name: Lint (ruff)
+        run: uvx ruff@0.14.1 check app mcp_server tests --line-length 88
+
+      - name: Secret & PII sweep (code-check.md §1)
+        run: |
+          set -e
+          # Credential material anywhere in tracked files
+          if git grep -nE "(BEGIN PRIVATE KEY|api[_-]?key\s*[:=]\s*['\"][A-Za-z0-9]{16,})" -- ':!*.md'; then
+            echo "::error::credential-shaped literal found"; exit 1; fi
+          # PII-shaped literals (TW national ID / phone) incl. fixtures
+          if git grep -nE "\b[A-Z][12][0-9]{8}\b|(^|[^0-9])09[0-9]{8}([^0-9]|$)" -- ':!tests/' ':!*.md' ':!uv.lock'; then
+            echo "::error::PII-shaped literal found"; exit 1; fi
+          # Service-account files must never be tracked
+          if git ls-files | grep -E "my-lab-.*\.json|service-account"; then
+            echo "::error::credential file tracked"; exit 1; fi
+
+      - name: Unit tests (policy engine, masking, store, gate wrapper)
+        run: uv run pytest tests/unit -q
+
+      - name: MCP round-trip (no LLM)
+        run: uv run pytest tests/integration/test_mcp_server.py -q

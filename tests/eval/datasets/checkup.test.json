@@ -1,0 +1,16 @@
+{
+  "eval_cases": [
+    {
+      "eval_case_id": "CHK-1",
+      "prompt": {"role": "user", "parts": [{"text": "How has my uric acid changed over the last three years?"}]}
+    },
+    {
+      "eval_case_id": "CHK-2",
+      "prompt": {"role": "user", "parts": [{"text": "Was anything abnormal in my latest checkup report?"}]}
+    },
+    {
+      "eval_case_id": "CHK-3",
+      "prompt": {"role": "user", "parts": [{"text": "What's my HbA1c trend looking like?"}]}
+    }
+  ]
+}

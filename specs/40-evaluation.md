@@ -52,10 +52,22 @@ Two extra checks beyond per-case scores:
 ## 4. Local gate commands (also in README)
 
 ```bash
-pytest tests/unit -q                 # deterministic gate
-python mcp_server/seed.py            # reseed fixtures
-agents-cli eval run                  # behavioral gate
+uv run pytest tests/unit tests/integration/test_mcp_server.py -q   # deterministic gate
+uv run python -m mcp_server.seed                                   # reseed fixtures
+# Behavioral gate — custom generator + agents-cli grade:
+uv run python tests/eval/generate_traces.py --dataset tests/eval/datasets/<ds>.test.json --output artifacts/traces/<ds>.json
+agents-cli eval grade --traces artifacts/traces/ --config tests/eval/eval_config.yaml
 ```
+
+**Why a custom trace generator** (instead of `agents-cli eval generate`): in
+agents-cli 0.5.1 the built-in inference path cannot load agents whose tools
+include an `McpToolset`, and it loads the bare root_agent — skipping App
+plugins, i.e. the PolicyPlugin under test. `tests/eval/generate_traces.py`
+runs each case through the real ADK Runner with the full App (plugins, HITL,
+MCP), emits grading-format traces, and represents HITL pauses with the
+`[[AWAITING_HUMAN_CONFIRMATION]]` sentinel that the quality rubric scores as
+correct designed behavior. The SEC-1 dataset is generated under
+`POLICY_ROLE=viewer`.
 
 ### 4.1 LLM-cost policy during development
 
