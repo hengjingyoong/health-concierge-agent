@@ -35,3 +35,6 @@ venv/
 
 # --- Eval artifacts (traces / grade results) ---
 artifacts/
+
+# --- Video production working files (local only) ---
+capstone-recording/
