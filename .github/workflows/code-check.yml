@@ -26,10 +26,11 @@ jobs:
         run: |
           set -e
           # Credential material anywhere in tracked files
-          if git grep -nE "(BEGIN PRIVATE KEY|api[_-]?key\s*[:=]\s*['\"][A-Za-z0-9]{16,})" -- ':!*.md'; then
+          # (.github/ excluded: this file contains the patterns themselves)
+          if git grep -nE "(BEGIN PRIVATE KEY|api[_-]?key\s*[:=]\s*['\"][A-Za-z0-9]{16,})" -- ':!*.md' ':!.github/'; then
             echo "::error::credential-shaped literal found"; exit 1; fi
           # PII-shaped literals (TW national ID / phone) incl. fixtures
-          if git grep -nE "\b[A-Z][12][0-9]{8}\b|(^|[^0-9])09[0-9]{8}([^0-9]|$)" -- ':!tests/' ':!*.md' ':!uv.lock'; then
+          if git grep -nE "\b[A-Z][12][0-9]{8}\b|(^|[^0-9])09[0-9]{8}([^0-9]|$)" -- ':!tests/' ':!*.md' ':!uv.lock' ':!.github/'; then
             echo "::error::PII-shaped literal found"; exit 1; fi
           # Service-account files must never be tracked
           if git ls-files | grep -E "my-lab-.*\.json|service-account"; then
