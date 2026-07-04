@@ -38,8 +38,13 @@ from mcp import StdioServerParameters
 from app import tools
 from app.policy.plugin import PolicyPlugin
 
-_, project_id = google.auth.default()
-os.environ["GOOGLE_CLOUD_PROJECT"] = project_id
+try:
+    _, project_id = google.auth.default()
+    os.environ["GOOGLE_CLOUD_PROJECT"] = project_id
+except google.auth.exceptions.DefaultCredentialsError:
+    # No credentials (e.g. CI running credential-free unit tests): imports
+    # must still succeed; actual model calls would fail, and don't run there.
+    pass
 os.environ["GOOGLE_CLOUD_LOCATION"] = "global"
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 
