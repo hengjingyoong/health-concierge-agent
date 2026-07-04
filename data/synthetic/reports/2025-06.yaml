@@ -1,0 +1,15 @@
+report:
+  report_id: "2025-06-clinic-b"
+  date: 2025-06-18
+  provider: "Clinic B"
+  metrics:
+    uric_acid:     {value: 7.4,  unit: mg/dL,  ref: "3.5-7.2",   flag: high}
+    alt:           {value: 41,   unit: U/L,    ref: "10-40",     flag: high}
+    ast:           {value: 31,   unit: U/L,    ref: "10-40",     flag: normal}
+    glucose_ac:    {value: 91,   unit: mg/dL,  ref: "70-100",    flag: normal}
+    ldl:           {value: 124,  unit: mg/dL,  ref: "0-130",     flag: normal}
+    hdl:           {value: 49,   unit: mg/dL,  ref: "40-999",    flag: normal}
+    triglycerides: {value: 128,  unit: mg/dL,  ref: "0-150",     flag: normal}
+    creatinine:    {value: 0.9,  unit: mg/dL,  ref: "0.7-1.3",   flag: normal}
+    hemoglobin:    {value: 14.8, unit: g/dL,   ref: "13.5-17.5", flag: normal}
+    bmi:           {value: 24.1, unit: kg/m2,  ref: "18.5-24",   flag: high}

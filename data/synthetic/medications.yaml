@@ -1,0 +1,27 @@
+# Synthetic medication log. Shape mirrors the author's real medication table
+# (name / dose / frequency / start date / prescriber / status).
+medications:
+  - name: allopurinol
+    dose: 100mg
+    frequency: once_daily_evening
+    start_date: 2026-05-10
+    prescriber: "[[DOCTOR_NAME]]"
+    status: active
+  - name: omeprazole
+    dose: 20mg
+    frequency: once_daily_morning
+    start_date: 2026-03-02
+    prescriber: "[[DOCTOR_NAME]]"
+    status: active
+  - name: fish_oil
+    dose: 1000mg
+    frequency: once_daily_morning
+    start_date: 2025-11-01
+    prescriber: null
+    status: active
+  - name: loratadine
+    dose: 10mg
+    frequency: as_needed
+    start_date: 2025-04-20
+    prescriber: "[[DOCTOR_NAME]]"
+    status: stopped

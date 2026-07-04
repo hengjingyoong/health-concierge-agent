@@ -11,6 +11,7 @@ my-lab-*.json
 
 # --- Real / private health data — keep PII out of a public repo ---
 data/private/
+data/*.db
 *.private.*
 **/real_*
 

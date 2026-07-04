@@ -1,0 +1,9 @@
+# Synthetic demo profile. Identity values are [[PLACEHOLDER]] tokens by design —
+# raw PII never exists anywhere in this repository (specs/30-security.md §6).
+profile:
+  name: "[[PATIENT_NAME]]"
+  national_id: "[[PATIENT_ID]]"
+  birth_year: 1994
+  sex: male
+  allergies:
+    - penicillin

@@ -1,0 +1,15 @@
+report:
+  report_id: "2026-06-clinic-a"
+  date: 2026-06-15
+  provider: "Clinic A"
+  metrics:
+    uric_acid:     {value: 7.9,  unit: mg/dL,  ref: "3.5-7.2",   flag: high}
+    alt:           {value: 44,   unit: U/L,    ref: "10-40",     flag: high}
+    ast:           {value: 33,   unit: U/L,    ref: "10-40",     flag: normal}
+    glucose_ac:    {value: 92,   unit: mg/dL,  ref: "70-100",    flag: normal}
+    ldl:           {value: 121,  unit: mg/dL,  ref: "0-130",     flag: normal}
+    hdl:           {value: 50,   unit: mg/dL,  ref: "40-999",    flag: normal}
+    triglycerides: {value: 131,  unit: mg/dL,  ref: "0-150",     flag: normal}
+    creatinine:    {value: 1.0,  unit: mg/dL,  ref: "0.7-1.3",   flag: normal}
+    hemoglobin:    {value: 15.0, unit: g/dL,   ref: "13.5-17.5", flag: normal}
+    bmi:           {value: 23.8, unit: kg/m2,  ref: "18.5-24",   flag: normal}
