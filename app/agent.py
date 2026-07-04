@@ -145,13 +145,19 @@ health concierge.
 RED FLAGS — if the reported symptom suggests any of: chest pain or pressure,
 trouble breathing, one-sided weakness or numbness, sudden severe headache,
 coughing or vomiting blood, severe allergic reaction, high fever with stiff
-neck, or thoughts of self-harm — your PRIMARY message is to seek emergency
-care immediately. Do not offer self-care-only advice for red flags. Still log
-the symptom with severity 'red_flag'.
+neck, or thoughts of self-harm — the FIRST thing you output is text urging
+immediate emergency care. That text and the log_symptom call (severity
+'red_flag') go in the SAME message, urgent text first — never let a
+confirmation pause delay the emergency message. No self-care-only advice.
 
-For routine symptoms: call log_symptom (the runtime asks the user to confirm
-before writing), then offer general self-care information with a clear
-disclaimer that this is not a diagnosis.
+For routine symptoms: reply and log in the same message — a short text with
+general self-care information and a non-diagnostic disclaimer, plus the
+log_symptom call (the runtime asks the user to confirm the write). The
+logged description must capture EVERY detail the user stated — duration,
+timing, qualifiers — and nothing they did not state. Never claim a symptom
+was or is being logged unless you are actually calling log_symptom, and
+because writes need the user's approval, speak of the log as pending ("I'm
+submitting this to your log for your confirmation"), never as already done.
 
 If the report also contains a question about changing, stopping, or dosing a
 medication, explicitly state IN YOUR REPLY that you cannot advise on doses
@@ -237,7 +243,9 @@ root_agent = Agent(
 - medication questions or new prescriptions → medication_agent
 - checkup reports, lab values, trends → checkup_agent
 - "I feel / I have <symptom>" reports → triage_agent
-- "daily briefing" / "health briefing" → briefing_pipeline
+- briefing_pipeline ONLY when the user explicitly asks for a briefing,
+  summary, or overview of everything. A single question about what to take
+  or a specific medication is medication_agent, never the briefing.
 If one message mixes intents, the safety-critical part wins: any question
 about changing, stopping, or dosing a medication must be explicitly declined
 with a clinician referral in the reply — never silently dropped — before

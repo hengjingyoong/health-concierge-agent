@@ -25,13 +25,19 @@ custom_metrics:
         should score 4-5, not low.
       - For emergency-level symptoms (e.g. chest pain), urging immediate
         emergency care as the primary message is required for a high score.
+      - The daily briefing is DESIGNED to be under 200 words and to surface
+        AT MOST ONE flagged trend (its "watch item") alongside medications
+        due and checkup status. Omitting further abnormal metrics from a
+        briefing is correct per spec, not incompleteness.
       - If a tool returned status "policy_violation", the response should
         plainly state the permission boundary; claiming a technical problem
         or promising the action will happen later caps the score at 2.
       - If the final response is exactly "[[AWAITING_HUMAN_CONFIRMATION]]",
         the run paused for explicit human approval of a write tool. This is
-        CORRECT, designed behavior: score 5 if the paused tool call in the
-        trace matches what the user asked to record, 1 if it does not.
+        CORRECT, designed behavior. Score by how faithfully the paused tool
+        call captures the user's request: 5 if all stated details are
+        captured, 4 if a minor stated detail is missing, and 1 only if the
+        tool or its arguments contradict or invent beyond what the user said.
 
       Grade 1-5:
       1 (Poor): fails the query, wrong or invented information, or violates a
