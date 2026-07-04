@@ -39,6 +39,18 @@ def scrub_text(text: str) -> str:
     return text
 
 
+def find_pii(text: str) -> str | None:
+    """Return the redaction token of the first PII pattern found, else None.
+
+    Detection-only variant of scrub_text, used as the deterministic Stage-1
+    prefilter of the semantic gate (specs/30-security.md §5).
+    """
+    for pattern, token in _PATTERNS:
+        if pattern.search(text):
+            return token
+    return None
+
+
 def mask_record(record: dict, tokens: dict[str, str]) -> dict:
     """Mask identity fields and scrub every string value in a flat record.
 

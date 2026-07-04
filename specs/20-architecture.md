@@ -120,6 +120,20 @@ both re-checked by the structural gate (role must allow writes).
 
 ## 5. Data model (synthetic fixtures → SQLite)
 
+Physical schema (authoritative DDL lives in `mcp_server/store.py::_SCHEMA`):
+
+```yaml
+sqlite_tables:
+  profile:     {key: TEXT PK, value: TEXT}
+  medications: {id: INTEGER PK, name: TEXT, dose: TEXT, frequency: TEXT,
+                start_date: TEXT, prescriber: TEXT?, status: TEXT}
+  reports:     {report_id: TEXT PK, date: TEXT, provider: TEXT}
+  metrics:     {report_id+metric: PK, value: REAL, unit: TEXT,
+                ref: TEXT, flag: TEXT}   # FK reports.report_id
+  symptoms:    {id: INTEGER PK, date: TEXT, description: TEXT,
+                severity: TEXT, suspected_trigger: TEXT?}
+```
+
 Mirrors the author's real system: one document per checkup report with a metrics map
 (Firestore `healthReports` shape) and a medication table (name/dose/frequency/start
 date/prescriber — same columns as the real medication log). Simplified where the real

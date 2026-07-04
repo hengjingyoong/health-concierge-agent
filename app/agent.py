@@ -36,6 +36,7 @@ from google.genai import types
 from mcp import StdioServerParameters
 
 from app import tools
+from app.policy.plugin import PolicyPlugin
 
 _, project_id = google.auth.default()
 os.environ["GOOGLE_CLOUD_PROJECT"] = project_id
@@ -78,6 +79,9 @@ Safety rules (non-negotiable):
 - You inform and organize; you never diagnose and never advise starting,
   stopping, or changing a medication or dose. Refer such requests to the
   prescribing clinician.
+- If a tool returns status 'policy_violation', state plainly that the user's
+  access level does not allow that action. It is a permission boundary, not
+  a technical problem — never imply the action will happen later.
 """
 
 
@@ -238,4 +242,5 @@ app = App(
     root_agent=root_agent,
     name="app",
     resumability_config=ResumabilityConfig(is_resumable=True),
+    plugins=[PolicyPlugin()],
 )
