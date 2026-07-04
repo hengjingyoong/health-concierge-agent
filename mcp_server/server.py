@@ -14,13 +14,13 @@ Run: ``uv run python -m mcp_server.server`` (DB path via ``HEALTH_DB_PATH``).
 from mcp.server.fastmcp import FastMCP
 
 from mcp_server import store
-from mcp_server.masking import mask_record
+from mcp_server.masking import MEDICATION_TOKENS, REPORT_TOKENS, mask_record
 
 mcp = FastMCP("health-data-mcp")
 
 
-def _masked(rows: list[dict]) -> list[dict]:
-    return [mask_record(row) for row in rows]
+def _masked(rows: list[dict], tokens: dict[str, str]) -> list[dict]:
+    return [mask_record(row, tokens) for row in rows]
 
 
 @mcp.tool()
@@ -28,7 +28,7 @@ def list_medications() -> list[dict]:
     """List all medications on record (active and stopped), with dose,
     frequency, start date, masked prescriber, and status."""
     with store.connect() as conn:
-        return _masked(store.list_medications(conn))
+        return _masked(store.list_medications(conn), MEDICATION_TOKENS)
 
 
 @mcp.tool()
@@ -39,7 +39,7 @@ def get_medication_schedule(time_of_day: str) -> list[dict]:
         time_of_day: One of 'morning', 'evening', or 'any' (all active).
     """
     with store.connect() as conn:
-        return _masked(store.get_medication_schedule(conn, time_of_day))
+        return _masked(store.get_medication_schedule(conn, time_of_day), MEDICATION_TOKENS)
 
 
 @mcp.tool()
@@ -47,7 +47,7 @@ def list_reports() -> list[dict]:
     """List all checkup reports (newest first) with report_id, date, provider,
     and the count of metrics flagged outside their reference range."""
     with store.connect() as conn:
-        return _masked(store.list_reports(conn))
+        return _masked(store.list_reports(conn), REPORT_TOKENS)
 
 
 @mcp.tool()
@@ -59,7 +59,7 @@ def get_report_details(report_id: str) -> list[dict]:
         report_id: The report identifier from list_reports.
     """
     with store.connect() as conn:
-        return _masked(store.get_report_details(conn, report_id))
+        return _masked(store.get_report_details(conn, report_id), REPORT_TOKENS)
 
 
 @mcp.tool()
@@ -72,7 +72,7 @@ def get_metric_history(metric: str) -> list[dict]:
         metric: Metric key, lowercase snake_case (e.g. 'uric_acid', 'alt').
     """
     with store.connect() as conn:
-        return _masked(store.get_metric_history(conn, metric))
+        return _masked(store.get_metric_history(conn, metric), REPORT_TOKENS)
 
 
 if __name__ == "__main__":

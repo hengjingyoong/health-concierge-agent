@@ -1,6 +1,12 @@
 """Boundary masking is the structural guarantee behind SEC-4 — test it hard."""
 
-from mcp_server.masking import mask_record, scrub_text
+from mcp_server.masking import (
+    MEDICATION_TOKENS,
+    PROFILE_TOKENS,
+    REPORT_TOKENS,
+    mask_record,
+    scrub_text,
+)
 
 
 class TestScrubText:
@@ -26,26 +32,34 @@ class TestScrubText:
 
 
 class TestMaskRecord:
-    def test_identity_fields_replaced_even_with_real_values(self):
+    def test_profile_identity_replaced_even_with_real_values(self):
         # Simulates being pointed at a REAL store: raw values must not survive.
-        record = {"name": "王小明", "national_id": "A123456789", "dose": "100mg"}
-        masked = mask_record(record)
+        record = {"name": "王小明", "national_id": "A123456789", "birth_year": 1994}
+        masked = mask_record(record, PROFILE_TOKENS)
         assert masked["name"] == "[[PATIENT_NAME]]"
         assert masked["national_id"] == "[[PATIENT_ID]]"
-        assert masked["dose"] == "100mg"
+        assert masked["birth_year"] == 1994
 
-    def test_prescriber_masked_but_none_preserved(self):
-        assert mask_record({"prescriber": "Dr. Real Name"})["prescriber"] == "[[DOCTOR_NAME]]"
-        assert mask_record({"prescriber": None})["prescriber"] is None
+    def test_medication_name_is_data_not_identity(self):
+        # Regression: 'name' on a medication row is the DRUG, not the patient.
+        record = {"name": "allopurinol", "prescriber": "Dr. Real Name"}
+        masked = mask_record(record, MEDICATION_TOKENS)
+        assert masked["name"] == "allopurinol"
+        assert masked["prescriber"] == "[[DOCTOR_NAME]]"
+
+    def test_prescriber_none_preserved(self):
+        assert mask_record({"prescriber": None}, MEDICATION_TOKENS)["prescriber"] is None
 
     def test_free_text_fields_are_scrubbed(self):
         record = {"description": "headache, contact 0912345678"}
-        assert mask_record(record)["description"] == "headache, contact [[REDACTED_PHONE]]"
+        masked = mask_record(record, REPORT_TOKENS)
+        assert masked["description"] == "headache, contact [[REDACTED_PHONE]]"
 
     def test_idempotent_on_placeholder_fixtures(self):
-        record = {"name": "[[PATIENT_NAME]]", "prescriber": "[[DOCTOR_NAME]]"}
-        assert mask_record(mask_record(record)) == mask_record(record)
+        record = {"name": "[[PATIENT_NAME]]", "national_id": "x"}
+        once = mask_record(record, PROFILE_TOKENS)
+        assert mask_record(once, PROFILE_TOKENS) == once
 
     def test_non_string_values_pass_through(self):
         record = {"value": 7.9, "flag": "high"}
-        assert mask_record(record) == {"value": 7.9, "flag": "high"}
+        assert mask_record(record, REPORT_TOKENS) == {"value": 7.9, "flag": "high"}

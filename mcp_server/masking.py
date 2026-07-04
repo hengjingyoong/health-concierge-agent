@@ -11,12 +11,18 @@ gate on outbound responses.
 
 import re
 
-# Structural masking: identity field name -> replacement token.
-IDENTITY_FIELD_TOKENS: dict[str, str] = {
+# Structural masking: identity field name -> replacement token, declared PER
+# DATA SURFACE. Field names collide across surfaces ("name" is a person on the
+# profile but a drug on a medication row), so each tool passes the map that
+# applies to the rows it returns; there is no blanket default.
+PROFILE_TOKENS: dict[str, str] = {
     "name": "[[PATIENT_NAME]]",
     "national_id": "[[PATIENT_ID]]",
+}
+MEDICATION_TOKENS: dict[str, str] = {
     "prescriber": "[[DOCTOR_NAME]]",
 }
+REPORT_TOKENS: dict[str, str] = {}  # report/metric rows carry no identity fields
 
 # Pattern scrubbing for free text (TW-flavored, matching the origin system).
 _PATTERNS: list[tuple[re.Pattern[str], str]] = [
@@ -33,18 +39,18 @@ def scrub_text(text: str) -> str:
     return text
 
 
-def mask_record(record: dict, extra_fields: dict[str, str] | None = None) -> dict:
+def mask_record(record: dict, tokens: dict[str, str]) -> dict:
     """Mask identity fields and scrub every string value in a flat record.
 
     Args:
         record: A row/document about to leave the server boundary.
-        extra_fields: Optional additional field->token overrides.
+        tokens: The field->token map for this record's data surface
+            (PROFILE_TOKENS / MEDICATION_TOKENS / REPORT_TOKENS).
 
     Returns:
         A new dict; identity fields replaced by tokens (None values preserved),
         all other string values pattern-scrubbed.
     """
-    tokens = {**IDENTITY_FIELD_TOKENS, **(extra_fields or {})}
     masked: dict = {}
     for key, value in record.items():
         if key in tokens:

@@ -61,9 +61,11 @@ async def test_full_roundtrip(server_params):
 
             meds = _payload(await session.call_tool("list_medications", {}))
             assert len(meds) == 4
-            # SEC-4: prescriber already masked when it crosses the boundary.
+            # SEC-4: prescriber already masked when it crosses the boundary...
             prescribers = {m["prescriber"] for m in meds}
             assert prescribers <= {"[[DOCTOR_NAME]]", None}
+            # ...while medication names stay usable data (masking regression).
+            assert "allopurinol" in {m["name"] for m in meds}
 
             history = _payload(
                 await session.call_tool("get_metric_history", {"metric": "uric_acid"})
