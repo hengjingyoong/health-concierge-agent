@@ -2,7 +2,7 @@
 
 *Kaggle 5-Day AI Agents Intensive — Capstone · Track: Concierge Agents*
 
-**Project link:** https://github.com/hengjingyoong/health-concierge-agent · **Video:** `<YOUTUBE_URL>`
+**Project link:** https://github.com/hengjingyoong/health-concierge-agent · **Video:** https://youtu.be/BCzBTxXuYhU
 
 ---
 
@@ -134,4 +134,4 @@ repo.
 ## Links
 
 - **Repo:** https://github.com/hengjingyoong/health-concierge-agent — specs, code, eval datasets, CI
-- **Video:** `<YOUTUBE_URL>` — the guardrails are the demo, not the fine print
+- **Video:** https://youtu.be/BCzBTxXuYhU — the guardrails are the demo, not the fine print

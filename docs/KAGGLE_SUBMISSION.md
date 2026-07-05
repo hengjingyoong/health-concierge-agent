@@ -67,7 +67,7 @@ Desc:  Spec-first repo: Gherkin behavior spec, ADK multi-agent system, MCP serve
 Link 2:
 
 ```
-URL:   <YOUTUBE_URL>
+URL:   https://youtu.be/BCzBTxXuYhU
 Title: Demo video (3.5 min) — the guardrails are the demo
 Desc:  Happy path, human-in-the-loop write approval, viewer blocked by the policy gate, and the semantic gate failing closed — all recorded live against the running agent.
 ```
@@ -77,8 +77,8 @@ Desc:  Happy path, human-in-the-loop write approval, viewer blocked by the polic
 - [ ] YouTube video is **unlisted** (not private) and plays in an incognito
       window
 - [ ] `final.srt` uploaded as CC; custom thumbnail = `docs/assets/cover.png`
-- [ ] Both `<YOUTUBE_URL>` placeholders in `docs/WRITEUP.md` replaced (repo
-      copy too, for consistency)
+- [x] Video URL (https://youtu.be/BCzBTxXuYhU) filled into `docs/WRITEUP.md`
+      and this pack
 - [ ] GitHub repo loads in incognito (public), CI badge green
 - [ ] Track = Concierge Agents selected
 - [ ] Checklist shows 8/8 → Submit
